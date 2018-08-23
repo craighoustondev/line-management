@@ -1,19 +1,48 @@
-from django.http import HttpResponse, Http404
-from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
+from django.views import generic
+from django.forms.models import model_to_dict
 
-from .models import Meeting
+from .models import Meeting, Employee
+from .forms import EmployeeForm, MeetingForm
 
-# Create your views here.
-def index(request):
-    latest_meeting_list = Meeting.objects.all()
-    context = {
-        'latest_meeting_list': latest_meeting_list
-    }
-    return render(request, 'meetings/index.html', context)
+
+class IndexView(generic.ListView):
+    template_name = 'meetings/index.html'
+    context_object_name = 'latest_meeting_list'
+
+    def get_queryset(self):
+        """Return the last five meetings."""
+        return Meeting.objects.all()[:5]
+
+
+def employees(request):
+    employees = Employee.objects.all()
+    return render(request, 'meetings/employees.html', {'employees': employees})
+
 
 def employee_detail(request, employee_id):
-    return HttpResponse("Details for employee %s." % employee_id)
+    employee = Employee.objects.get(pk=employee_id)
+    if request.method == 'POST':
+        print('POST')
+    else:
+        employee_dict = model_to_dict(employee)
+        form = EmployeeForm(employee_dict)
 
-def meeting_detail(request, meeting_id):
-    meeting = get_object_or_404(Meeting, pk=meeting_id)
-    return render(request, 'meetings/meeting_detail.html', {'meeting': meeting})
+        return render(request, 'meetings/employee_detail.html', {'form':form})
+
+
+def employee_edit(request, employee_id):
+    employee = Employee.objects.get(pk=employee_id)
+    return redirect(reverse('employees'))
+
+
+'''
+class EmployeeDetailView(generic.DetailView):
+    model = Employee
+    template_name = 'meetings/employee_detail.html'
+'''
+class MeetingDetailView(generic.DetailView):
+    model = Meeting
+    template_name = 'meetings/meeting_detail.html'
