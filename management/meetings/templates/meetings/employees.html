@@ -5,7 +5,8 @@
     <title>Employees</title>
 </head>
 <body>
-
+    <h1>Your Employees:</h1>
+    {% if employees %}
         <table class="table">
             <thead>
               <tr>
@@ -26,6 +27,9 @@
               {% endfor %}
             </tbody>
           </table>
+    {% else %}
+        <p>You do not have any Employees under your direct line management.</p>
+    {% endif %}
 
 </body>
 </html>

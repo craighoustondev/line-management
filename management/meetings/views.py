@@ -7,7 +7,7 @@ from django.forms.models import model_to_dict
 from .models import Meeting, Employee
 from .forms import EmployeeForm, MeetingForm
 
-
+'''
 class IndexView(generic.ListView):
     template_name = 'meetings/index.html'
     context_object_name = 'latest_meeting_list'
@@ -15,11 +15,20 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         """Return the last five meetings."""
         return Meeting.objects.all()[:5]
+'''
+
+def index(request):
+    return render(request, 'meetings/index.html')
 
 
 def employees(request):
     employees = Employee.objects.all()
     return render(request, 'meetings/employees.html', {'employees': employees})
+
+
+def meetings(request):
+    meetings = Meeting.objects.all()
+    return render(request, 'meetings/meetings.html', {'meetings': meetings})
 
 
 def employee_detail(request, employee_id):
