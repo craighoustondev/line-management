@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Meetings</title>
+</head>
+<body>
+    <h1>Meeting:</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ meeting_form.as_p }}
+        {% for note_form in note_forms %}
+            {{ note_form.as_p }}
+        {% endfor %}
+    <input type="submit" value="Submit">
+    <a href="{% url 'meetings:meetings' %}"
+       class="btn" role="button">Back to Matches</a>
+</form>
+
+</body>
+</html>

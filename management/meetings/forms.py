@@ -1,5 +1,5 @@
 from django import forms
-from .models import Employee, Meeting
+from .models import Employee, Meeting, Note
 
 class EmployeeForm(forms.ModelForm):
     class Meta:
@@ -10,3 +10,8 @@ class MeetingForm(forms.ModelForm):
     class Meta:
         model = Meeting
         fields = '__all__'
+
+class NoteForm(forms.ModelForm):
+    class Meta:
+        model = Note
+        fields = ('text',)
