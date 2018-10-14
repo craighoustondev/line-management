@@ -1,7 +1,30 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'meetings/style.css' %}">
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="application/javascript"></script>
+    <script>
+    $(document).ready(function() {
+
+        $(".edit-button").on("click", function(e) {
+            var t = this.closest("tr").children[0].children[0].children[1];
+            t.disabled = false;
+
+            var saveButton = this.closest("tr").children[3].children[0];
+            saveButton.className = "visible-save-button";
+        });
+
+        $(".invisible-save-button").on("click", function(e) {
+            this.className = "invisible-save-button";
+            var t = this.closest("tr").children[0].children[0].children[1];
+            t.disabled = true;
+        });
+    });
+    </script>
     <title>Your Meetings</title>
 </head>
 <body>
@@ -10,13 +33,33 @@
     <form method="post">
         {% csrf_token %}
         {{ meeting_form.as_p }}
-        {% for note_form in note_forms %}
-            {{ note_form.as_p }}
-        {% endfor %}
     <input type="submit" value="Submit">
     <a href="{% url 'meetings:meetings' %}"
-       class="btn" role="button">Back to Matches</a>
-</form>
+       class="btn" role="button">Back to Meetings</a>
+    </form>
+
+    <h2>Meeting Notes:</h2>
+
+        <table class="table">
+            <tbody>
+              {% for note_form in note_forms %}
+              <tr>
+                <td>{{ note_form.as_p }}</td>
+                <td>
+                    <button type="button" class="edit-button">Edit Note</button>
+                </td>
+                <td>
+                    <button type="button" onclick="alert('Delete Note')">Delete Note</button>
+                </td>
+                  <td>
+                    <button type="button" class="invisible-save-button">Save Note</button>
+                  </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+    <br>
+    <button type="button" onclick="alert('Add Note')">Add Note</button>
 
 </body>
 </html>
